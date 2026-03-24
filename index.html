@@ -93,12 +93,29 @@
 </div>
 
         <!-- Notes -->
-        <div class="col-md-4">
-          <div class="neu-card p-3">
-            <h6>Recent Notes</h6>
-            <ul id="notesList"></ul>
-          </div>
-        </div>
+        <div class="col-md-6">
+  <div class="neu-card p-3">
+
+    <h5>Notes</h5>
+
+    <!-- ADD NOTE -->
+    <div class="mb-3">
+      <input id="noteTitle" class="neu-input w-100 mb-2" placeholder="Title">
+      <textarea id="noteContent" class="neu-input w-100 mb-2" placeholder="Write note..."></textarea>
+      <input id="noteTags" class="neu-input w-100 mb-2" placeholder="Tags (comma separated)">
+      <button class="neu-btn w-100" onclick="addNote()">Add Note</button>
+    </div>
+
+    <!-- SEARCH -->
+    <input id="searchNote" class="neu-input w-100 mb-3" placeholder="Search notes..." oninput="searchNotes()">
+
+    <!-- NOTES LIST -->
+    <div id="notesList"></div>
+
+    <p id="notesEmpty" class="text-center mt-3"></p>
+
+  </div>
+</div>
 
       </div>
 
@@ -110,5 +127,6 @@
 
 <script src="js/dashboard.js"></script>
 <script src="js/tasks.js"></script>
+<script src="js/notes.js"></script>
 </body>
 </html>
