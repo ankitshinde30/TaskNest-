@@ -57,12 +57,40 @@
         </div>
 
         <!-- Tasks -->
-        <div class="col-md-4">
-          <div class="neu-card p-3">
-            <h6>Today's Tasks</h6>
-            <ul id="taskList"></ul>
-          </div>
-        </div>
+      <div class="col-md-6">
+  <div class="neu-card p-3">
+
+    <h5>Task Manager</h5>
+
+    <!-- ADD TASK -->
+    <div class="d-flex gap-2 mb-3">
+      <input id="taskInput" class="neu-input w-100" placeholder="New Task">
+
+      <select id="priority" class="neu-input">
+        <option>Low</option>
+        <option>Medium</option>
+        <option>High</option>
+      </select>
+
+      <input type="date" id="deadline" class="neu-input">
+
+      <button class="neu-btn" onclick="addTask()">+</button>
+    </div>
+
+    <!-- FILTER -->
+    <div class="d-flex gap-2 mb-3">
+      <button class="neu-btn" onclick="filterTasks('all')">All</button>
+      <button class="neu-btn" onclick="filterTasks('completed')">Done</button>
+      <button class="neu-btn" onclick="filterTasks('pending')">Pending</button>
+    </div>
+
+    <!-- TASK LIST -->
+    <ul id="taskList"></ul>
+
+    <p id="emptyState" class="text-center mt-3"></p>
+
+  </div>
+</div>
 
         <!-- Notes -->
         <div class="col-md-4">
@@ -81,5 +109,6 @@
 </div>
 
 <script src="js/dashboard.js"></script>
+<script src="js/tasks.js"></script>
 </body>
 </html>

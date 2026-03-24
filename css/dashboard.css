@@ -82,3 +82,29 @@ body {
   width: 0%;
   background: linear-gradient(135deg, #6EA2B3, #7BBDE8);
 }
+
+/* TASK ITEM */
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+
+  background: var(--bg-card);
+  box-shadow: 
+    4px 4px 8px var(--shadow-dark),
+    -4px -4px 8px var(--shadow-light);
+}
+
+/* PRIORITY COLORS */
+.low { border-left: 5px solid #7BBDE8; }
+.medium { border-left: 5px solid #4E8EA2; }
+.high { border-left: 5px solid #001D39; }
+
+/* COMPLETED */
+.completed {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
