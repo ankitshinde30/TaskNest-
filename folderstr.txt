@@ -1,0 +1,32 @@
+tasknest/
+│
+├── index.html (Dashboard)
+├── login.html
+├── signup.html
+├── profile.html
+├── settings.html
+│
+├── /css
+│   ├── style.css
+│   ├── auth.css
+│   ├── dashboard.css
+│
+├── /js
+│   ├── app.js
+│   ├── auth.js
+│   ├── dashboard.js
+│   ├── tasks.js
+│   ├── notes.js
+│   ├── search.js
+│   ├── storage.js
+│   ├── ui.js
+│
+├── /components
+│   ├── navbar.js
+│   ├── sidebar.js
+│   ├── toast.js
+│
+├── /assets
+│   ├── images/
+│
+└── README.md

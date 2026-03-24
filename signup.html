@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TaskNest - Signup</title>
+  <link rel="stylesheet" href="css/auth.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="auth-container d-flex justify-content-center align-items-center vh-100">
+
+  <div class="neu-card p-4" style="width: 400px;">
+
+    <h3 class="text-center mb-4">TaskNest Signup</h3>
+
+    <!-- Progress Bar -->
+    <div class="progress mb-4">
+      <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="form-step active">
+      <input type="text" id="name" class="neu-input w-100 mb-3" placeholder="Full Name">
+      <input type="email" id="email" class="neu-input w-100 mb-3" placeholder="Email">
+      <button class="neu-btn w-100" onclick="nextStep()">Next</button>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="form-step">
+      <input type="password" id="password" class="neu-input w-100 mb-2" placeholder="Password">
+      <div id="strength" class="mb-2 small"></div>
+
+      <input type="password" id="confirmPassword" class="neu-input w-100 mb-3" placeholder="Confirm Password">
+
+      <div class="d-flex gap-2">
+        <button class="neu-btn w-50" onclick="prevStep()">Back</button>
+        <button class="neu-btn w-50" onclick="nextStep()">Next</button>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="form-step">
+      <p id="review"></p>
+
+      <div class="d-flex gap-2">
+        <button class="neu-btn w-50" onclick="prevStep()">Back</button>
+        <button class="neu-btn w-50" onclick="submitForm()">Submit</button>
+      </div>
+    </div>
+
+    <p class="text-center mt-3">
+      Already have an account? <a href="login.html">Login</a>
+    </p>
+
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+/* ROOT COLORS */
+:root {
+  --bg-main: #BDD8E9;
+  --bg-card: #e6f2f8;
+
+  --text-primary: #001D39;
+  --accent: #4E8EA2;
+
+  --shadow-light: rgba(255,255,255,0.7);
+  --shadow-dark: rgba(0,0,0,0.15);
+}
+
+/* BACKGROUND */
+body {
+  background: linear-gradient(135deg, #0A4174, #4E8EA2);
+  font-family: sans-serif;
+}
+
+/* NEUMORPHISM CARD */
+.neu-card {
+  background: var(--bg-card);
+  border-radius: 20px;
+  box-shadow: 
+    8px 8px 16px var(--shadow-dark),
+    -8px -8px 16px var(--shadow-light);
+}
+
+/* INPUT */
+.neu-input {
+  border: none;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--bg-card);
+  box-shadow: inset 3px 3px 6px var(--shadow-dark),
+              inset -3px -3px 6px var(--shadow-light);
+  outline: none;
+}
+
+/* BUTTON */
+.neu-btn {
+  border: none;
+  padding: 10px;
+  border-radius: 12px;
+  background: var(--bg-card);
+  box-shadow: 
+    4px 4px 8px var(--shadow-dark),
+    -4px -4px 8px var(--shadow-light);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.neu-btn:active {
+  box-shadow: inset 4px 4px 8px var(--shadow-dark),
+              inset -4px -4px 8px var(--shadow-light);
+}
+
+/* STEPS */
+.form-step {
+  display: none;
+}
+
+.form-step.active {
+  display: block;
+}
+
+/* PROGRESS */
+.progress {
+  height: 8px;
+  border-radius: 10px;
+}
+
+.progress-bar {
+  width: 33%;
+  background: linear-gradient(135deg, #6EA2B3, #7BBDE8);
+  transition: 0.3s;
+}
