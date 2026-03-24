@@ -1,0 +1,84 @@
+:root {
+  --bg-main: #BDD8E9;
+  --bg-card: #e6f2f8;
+
+  --text-primary: #001D39;
+
+  --shadow-light: rgba(255,255,255,0.7);
+  --shadow-dark: rgba(0,0,0,0.15);
+}
+
+/* DARK MODE */
+[data-theme="dark"] {
+  --bg-main: #001D39;
+  --bg-card: #0A4174;
+  --text-primary: #BDD8E9;
+
+  --shadow-light: rgba(255,255,255,0.05);
+  --shadow-dark: rgba(0,0,0,0.6);
+}
+
+body {
+  background: linear-gradient(135deg, #0A4174, #4E8EA2);
+  color: var(--text-primary);
+  font-family: sans-serif;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  padding: 20px;
+  transition: 0.3s;
+
+  background: linear-gradient(180deg, #001D39, #0A4174);
+  color: white;
+}
+
+.sidebar.collapsed {
+  width: 80px;
+}
+
+.sidebar .nav-link {
+  color: #BDD8E9;
+  margin: 10px 0;
+}
+
+.sidebar .nav-link:hover {
+  color: #7BBDE8;
+}
+
+/* MAIN */
+.main-content {
+  padding: 20px;
+}
+
+/* NEUMORPHISM */
+.neu-card {
+  background: var(--bg-card);
+  border-radius: 20px;
+  box-shadow: 
+    8px 8px 16px var(--shadow-dark),
+    -8px -8px 16px var(--shadow-light);
+}
+
+.neu-btn {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--bg-card);
+  box-shadow: 
+    4px 4px 8px var(--shadow-dark),
+    -4px -4px 8px var(--shadow-light);
+  cursor: pointer;
+}
+
+/* PROGRESS */
+.progress {
+  height: 8px;
+}
+
+.progress-bar {
+  width: 0%;
+  background: linear-gradient(135deg, #6EA2B3, #7BBDE8);
+}

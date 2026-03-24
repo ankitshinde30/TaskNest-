@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TaskNest Dashboard</title>
+
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="d-flex">
+
+  <!-- SIDEBAR -->
+  <div id="sidebar" class="sidebar">
+
+    <h4 class="text-center mb-4">TaskNest</h4>
+
+    <ul class="nav flex-column">
+      <li class="nav-item"><a class="nav-link active" href="#">Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link" href="#">Tasks</a></li>
+      <li class="nav-item"><a class="nav-link" href="#">Notes</a></li>
+      <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
+      <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
+    </ul>
+
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-content w-100">
+
+    <!-- NAVBAR -->
+    <div class="navbar neu-card d-flex justify-content-between align-items-center p-3">
+
+      <button class="neu-btn" onclick="toggleSidebar()">☰</button>
+
+      <h5 id="welcomeText">Welcome 👋</h5>
+
+      <button class="neu-btn" onclick="toggleTheme()">🌙</button>
+
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="container mt-4">
+
+      <div class="row g-4">
+
+        <!-- Progress -->
+        <div class="col-md-4">
+          <div class="neu-card p-3">
+            <h6>Progress</h6>
+            <div class="progress mt-2">
+              <div class="progress-bar" id="progressBar"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tasks -->
+        <div class="col-md-4">
+          <div class="neu-card p-3">
+            <h6>Today's Tasks</h6>
+            <ul id="taskList"></ul>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="col-md-4">
+          <div class="neu-card p-3">
+            <h6>Recent Notes</h6>
+            <ul id="notesList"></ul>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script src="js/dashboard.js"></script>
+</body>
+</html>
