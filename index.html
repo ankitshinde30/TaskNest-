@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>TaskNest Dashboard</title>
@@ -10,133 +11,157 @@
 
 <body>
 
-<div class="d-flex">
+  <div class="d-flex">
 
-  <!-- SIDEBAR -->
-  <div id="sidebar" class="sidebar">
+    <!-- SIDEBAR -->
+    <div id="sidebar" class="sidebar">
 
-    <h4 class="text-center mb-4">TaskNest</h4>
+      <h4 class="text-center mb-4">TaskNest</h4>
 
-    <ul class="nav flex-column">
-      <li class="nav-item"><a class="nav-link active" href="#">Dashboard</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">Tasks</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">Notes</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
-    </ul>
-
-  </div>
-
-  <!-- MAIN -->
-  <div class="main-content w-100">
-
-    <!-- NAVBAR -->
-    <div class="navbar neu-card d-flex justify-content-between align-items-center p-3">
-
-      <button class="neu-btn" onclick="toggleSidebar()">☰</button>
-
-      <h5 id="welcomeText">Welcome 👋</h5>
-      <input 
-  id="globalSearch" 
-  class="neu-input w-50" 
-  placeholder="Search tasks, notes..." 
-  oninput="globalSearch()" 
->
-<div class="container mt-3">
-  <div id="searchResults" class="neu-card p-3"></div>
-</div>
-
-      <button class="neu-btn" onclick="toggleTheme()">🌙</button>
+      <ul class="nav flex-column">
+        <li class="nav-item"><a class="nav-link active" href="#">Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Tasks</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Notes</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
+      </ul>
 
     </div>
 
-    <!-- DASHBOARD -->
-    <div class="container mt-4">
+    <!-- MAIN -->
+    <div class="main-content w-100">
 
-      <div class="row g-4">
+      <!-- NAVBAR -->
+      <div class="navbar neu-card d-flex justify-content-between align-items-center p-3">
 
-        <!-- Progress -->
-        <div class="col-md-4">
-          <div class="neu-card p-3">
-            <h6>Progress</h6>
-            <div class="progress mt-2">
-              <div class="progress-bar" id="progressBar"></div>
-            </div>
-          </div>
+        <button class="neu-btn" onclick="toggleSidebar()">☰</button>
+
+        <h5 id="welcomeText">Welcome 👋</h5>
+        <input id="globalSearch" class="neu-input w-50" placeholder="Search tasks, notes..." oninput="globalSearch()">
+        <div class="container mt-3">
+          <div id="searchResults" class="neu-card p-3"></div>
         </div>
 
-        <!-- Tasks -->
-      <div class="col-md-6">
-  <div class="neu-card p-3">
-
-    <h5>Task Manager</h5>
-
-    <!-- ADD TASK -->
-    <div class="d-flex gap-2 mb-3">
-      <input id="taskInput" class="neu-input w-100" placeholder="New Task">
-
-      <select id="priority" class="neu-input">
-        <option>Low</option>
-        <option>Medium</option>
-        <option>High</option>
-      </select>
-
-      <input type="date" id="deadline" class="neu-input">
-
-      <button class="neu-btn" onclick="addTask()">+</button>
-    </div>
-
-    <!-- FILTER -->
-    <div class="d-flex gap-2 mb-3">
-      <button class="neu-btn" onclick="filterTasks('all')">All</button>
-      <button class="neu-btn" onclick="filterTasks('completed')">Done</button>
-      <button class="neu-btn" onclick="filterTasks('pending')">Pending</button>
-    </div>
-
-    <!-- TASK LIST -->
-    <ul id="taskList"></ul>
-
-    <p id="emptyState" class="text-center mt-3"></p>
-
-  </div>
-</div>
-
-        <!-- Notes -->
-        <div class="col-md-6">
-  <div class="neu-card p-3">
-
-    <h5>Notes</h5>
-
-    <!-- ADD NOTE -->
-    <div class="mb-3">
-      <input id="noteTitle" class="neu-input w-100 mb-2" placeholder="Title">
-      <textarea id="noteContent" class="neu-input w-100 mb-2" placeholder="Write note..."></textarea>
-      <input id="noteTags" class="neu-input w-100 mb-2" placeholder="Tags (comma separated)">
-      <button class="neu-btn w-100" onclick="addNote()">Add Note</button>
-    </div>
-
-    <!-- SEARCH -->
-    <input id="searchNote" class="neu-input w-100 mb-3" placeholder="Search notes..." oninput="searchNotes()">
-
-    <!-- NOTES LIST -->
-    <div id="notesList"></div>
-
-    <p id="notesEmpty" class="text-center mt-3"></p>
-
-  </div>
-</div>
+        <button class="neu-btn" onclick="toggleTheme()">🌙</button>
 
       </div>
 
+      <!-- DASHBOARD -->
+      <div class="container mt-4">
+
+        <div class="row g-4">
+
+          <!-- Progress -->
+          <div class="col-md-4">
+            <div class="neu-card p-3">
+              <h6>Progress</h6>
+              <div class="progress mt-2">
+                <div class="progress-bar" id="progressBar"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tasks -->
+          <div class="col-md-6">
+            <div class="neu-card p-3">
+
+              <h5>Task Manager</h5>
+
+              <!-- ADD TASK -->
+              <div class="d-flex gap-2 mb-3">
+                <input id="taskInput" class="neu-input w-100" placeholder="New Task">
+
+                <select id="priority" class="neu-input">
+                  <option>Low</option>
+                  <option>Medium</option>
+                  <option>High</option>
+                </select>
+
+                <input type="date" id="deadline" class="neu-input">
+
+                <button class="neu-btn" onclick="addTask()">+</button>
+              </div>
+
+              <!-- FILTER -->
+              <div class="d-flex gap-2 mb-3">
+                <button class="neu-btn" onclick="filterTasks('all')">All</button>
+                <button class="neu-btn" onclick="filterTasks('completed')">Done</button>
+                <button class="neu-btn" onclick="filterTasks('pending')">Pending</button>
+              </div>
+
+              <!-- TASK LIST -->
+              <ul id="taskList"></ul>
+
+              <p id="emptyState" class="text-center mt-3"></p>
+
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="col-md-6">
+            <div class="neu-card p-3">
+
+              <h5>Notes</h5>
+
+              <!-- ADD NOTE -->
+              <div class="mb-3">
+                <input id="noteTitle" class="neu-input w-100 mb-2" placeholder="Title">
+                <textarea id="noteContent" class="neu-input w-100 mb-2" placeholder="Write note..."></textarea>
+                <input id="noteTags" class="neu-input w-100 mb-2" placeholder="Tags (comma separated)">
+                <button class="neu-btn w-100" onclick="addNote()">Add Note</button>
+              </div>
+
+              <!-- SEARCH -->
+              <input id="searchNote" class="neu-input w-100 mb-3" placeholder="Search notes..." oninput="searchNotes()">
+
+              <!-- NOTES LIST -->
+              <div id="notesList"></div>
+
+              <p id="notesEmpty" class="text-center mt-3"></p>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+      <div class="container mt-4">
+
+  <div class="neu-card p-3">
+
+    <h5>Calendar</h5>
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <button class="neu-btn" onclick="changeMonth(-1)">⬅</button>
+      <h6 id="monthYear"></h6>
+      <button class="neu-btn" onclick="changeMonth(1)">➡</button>
     </div>
+
+    <!-- CALENDAR GRID -->
+    <div id="calendar" class="calendar-grid"></div>
 
   </div>
 
 </div>
 
-<script src="js/dashboard.js"></script>
-<script src="js/tasks.js"></script>
-<script src="js/notes.js"></script>
-<script src="js/search.js"></script>
+<!-- TODAY TASKS -->
+<div class="container mt-3">
+  <div class="neu-card p-3">
+    <h6>Today's Tasks</h6>
+    <ul id="todayTasks"></ul>
+  </div>
+</div>
+
+    </div>
+
+  </div>
+
+  <script src="js/dashboard.js"></script>
+  <script src="js/tasks.js"></script>
+  <script src="js/notes.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/calendar.js"></script>
 </body>
+
 </html>

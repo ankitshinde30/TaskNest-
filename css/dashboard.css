@@ -152,3 +152,34 @@ body {
   border-radius: 10px;
   cursor: pointer;
 }
+
+/* CALENDAR GRID */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+}
+
+/* DAY CELL */
+.day {
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+
+  background: var(--bg-card);
+  box-shadow: 
+    3px 3px 6px var(--shadow-dark),
+    -3px -3px 6px var(--shadow-light);
+}
+
+/* TODAY */
+.today {
+  border: 2px solid #7BBDE8;
+}
+
+/* HAS TASK */
+.has-task {
+  background: linear-gradient(135deg, #6EA2B3, #7BBDE8);
+  color: white;
+}
