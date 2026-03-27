@@ -134,3 +134,21 @@ body {
   border-radius: 8px;
   background: var(--accent-soft);
 }
+
+/* SEARCH RESULTS */
+.search-item {
+  padding: 10px;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.search-item strong {
+  color: var(--accent);
+}
+
+/* TAG FILTER BUTTON */
+.tag-filter {
+  margin: 5px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}

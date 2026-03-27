@@ -36,6 +36,15 @@
       <button class="neu-btn" onclick="toggleSidebar()">☰</button>
 
       <h5 id="welcomeText">Welcome 👋</h5>
+      <input 
+  id="globalSearch" 
+  class="neu-input w-50" 
+  placeholder="Search tasks, notes..." 
+  oninput="globalSearch()" 
+>
+<div class="container mt-3">
+  <div id="searchResults" class="neu-card p-3"></div>
+</div>
 
       <button class="neu-btn" onclick="toggleTheme()">🌙</button>
 
@@ -128,5 +137,6 @@
 <script src="js/dashboard.js"></script>
 <script src="js/tasks.js"></script>
 <script src="js/notes.js"></script>
+<script src="js/search.js"></script>
 </body>
 </html>
