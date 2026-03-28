@@ -183,3 +183,9 @@ body {
   background: linear-gradient(135deg, #6EA2B3, #7BBDE8);
   color: white;
 }
+
+/* STATS CARDS HOVER */
+.neu-card:hover {
+  transform: translateY(-5px);
+  transition: 0.2s;
+}

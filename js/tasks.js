@@ -105,6 +105,7 @@ function renderTasks() {
   });
 
   updateProgress();
+  updateStats();
 }
 
 /* UPDATE PROGRESS */
