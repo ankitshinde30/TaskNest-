@@ -14,8 +14,8 @@ function toggleTheme() {
 
 /* LOAD THEME */
 (function () {
-  const saved = localStorage.getItem("theme");
-  if (saved) document.body.dataset.theme = saved;
+  const saved = localStorage.getItem("theme") || "light";
+  document.body.dataset.theme = saved;
 })();
 
 /* LOAD USER */
