@@ -12,15 +12,16 @@ function addTask() {
   const priority = document.getElementById("priority").value;
   const deadline = document.getElementById("deadline").value;
 
-  if (!text) return alert("Enter task");
+  if (!text) return showToast("Please enter a task ⚠️");
 
   tasks.push({
-    id: Date.now(),
-    text,
-    priority,
-    deadline,
-    completed: false
-  });
+  id: Date.now(),
+  text,
+  priority,
+  deadline,
+  completed: false,
+  pinned: false
+});
 
   saveTasks();
   renderTasks();
@@ -78,14 +79,20 @@ function renderTasks() {
   }
 
   if (filtered.length === 0) {
-    empty.innerText = "No tasks found 🚀";
+    empty.innerHTML = `
+  <div class="text-center p-3">
+    <h6>No tasks yet 🚀</h6>
+    <p>Start by adding your first task</p>
+  </div>
+`;
     return;
   } else {
     empty.innerText = "";
   }
-
+  filtered.sort((a, b) => b.pinned - a.pinned);
   filtered.forEach(t => {
     const li = document.createElement("li");
+    li.classList.add("fade-in");
 
     li.className = `task-item ${t.priority.toLowerCase()} ${t.completed ? "completed" : ""}`;
 
@@ -96,6 +103,7 @@ function renderTasks() {
       </div>
 
       <div>
+      <button onclick="togglePinTask(${t.id})">📌</button>
         <button onclick="editTask(${t.id})">✏️</button>
         <button onclick="deleteTask(${t.id})">🗑</button>
       </div>
@@ -118,5 +126,13 @@ function updateProgress() {
   document.getElementById("progressBar").style.width = progress + "%";
 }
 
+function togglePinTask(id) {
+  tasks = tasks.map(t =>
+    t.id === id ? { ...t, pinned: !t.pinned } : t
+  );
+
+  saveTasks();
+  renderTasks();
+}
 /* INIT */
 renderTasks();

@@ -57,3 +57,18 @@ const completed = tasks.filter(t => t.completed).length;
 const progress = (completed / tasks.length) * 100;
 
 document.getElementById("progressBar").style.width = progress + "%";
+
+function smartSuggestions() {
+  const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+  const pending = tasks.filter(t => !t.completed).length;
+  const completed = tasks.filter(t => t.completed).length;
+
+  if (pending >= 5) {
+    showToast(`⚠️ You have ${pending} pending tasks!`);
+  }
+
+  if (completed >= 5) {
+    showToast(`🔥 Great job! ${completed} tasks done!`);
+  }
+}

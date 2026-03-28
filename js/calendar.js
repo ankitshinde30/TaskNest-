@@ -97,3 +97,4 @@ function checkReminders() {
 renderCalendar();
 loadTodayTasks();
 checkReminders();
+smartSuggestions();

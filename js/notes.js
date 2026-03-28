@@ -12,7 +12,7 @@ function addNote() {
   const content = document.getElementById("noteContent").value;
   const tags = document.getElementById("noteTags").value.split(",");
 
-  if (!title || !content) return alert("Fill all fields");
+  if (!title || !content) return showToast("Fill all fields ⚠️");
 
   notes.push({
     id: Date.now(),
@@ -93,7 +93,12 @@ function renderNotes() {
   filtered.sort((a, b) => b.pinned - a.pinned);
 
   if (filtered.length === 0) {
-    empty.innerText = "No notes yet 📝";
+    empty.innerHTML = `
+  <div class="text-center p-3">
+    <h6>No notes yet 📝</h6>
+    <p>Create your first note</p>
+  </div>
+`;
     return;
   } else {
     empty.innerText = "";
@@ -101,6 +106,7 @@ function renderNotes() {
 
   filtered.forEach(n => {
     const div = document.createElement("div");
+    div.classList.add("fade-in");
 
     div.className = `note-card ${n.pinned ? "pinned" : ""}`;
 

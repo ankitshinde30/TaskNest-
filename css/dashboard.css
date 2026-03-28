@@ -189,3 +189,26 @@ body {
   transform: translateY(-5px);
   transition: 0.2s;
 }
+
+/* HOVER LIFT */
+.neu-card:hover {
+  transform: translateY(-6px);
+  transition: all 0.2s ease;
+}
+
+/* BUTTON HOVER */
+.neu-btn:hover {
+  transform: scale(1.05);
+}
+
+/* FADE IN */
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}

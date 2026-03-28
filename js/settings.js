@@ -43,6 +43,6 @@ function exportData() {
 /* LOGOUT */
 function logout() {
   localStorage.removeItem("tasknest_user");
-  alert("Logged out!");
+  showToast("Logged out successfully 🚪");
   window.location.href = "login.html";
 }
