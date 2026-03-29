@@ -1,23 +1,123 @@
-<div class="neu-card p-4" style="width:350px;">
-  <h3 class="text-center mb-3">Login</h3>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskNest – Sign In</title>
+  <link rel="stylesheet" href="css/auth.css" />
+</head>
+<body>
 
-  <input type="email" id="loginEmail" class="neu-input w-100 mb-3" placeholder="Email">
-  <input type="password" id="loginPassword" class="neu-input w-100 mb-3" placeholder="Password">
+  <div class="auth-wrapper">
+    <div class="auth-card">
 
-  <button class="neu-btn w-100" onclick="login()">Login</button>
-</div>
+      <!-- Logo -->
+      <div class="auth-logo">
+        <div class="auth-logo-icon">🪺</div>
+        <span class="auth-logo-text">TaskNest</span>
+      </div>
 
-<script>
-function login() {
-  const stored = JSON.parse(localStorage.getItem("tasknest_user"));
-  const email = document.getElementById("loginEmail").value;
-  const pass = document.getElementById("loginPassword").value;
+      <!-- Heading -->
+      <h1 class="auth-title">Welcome back</h1>
+      <p class="auth-subtitle">Sign in to continue to your dashboard</p>
 
-  if (stored && stored.email === email && stored.password === pass) {
-    alert("Login Successful");
-    window.location.href = "index.html";
-  } else {
-    alert("Invalid credentials");
-  }
-}
-</script>
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label" for="loginEmail">Email Address</label>
+        <div class="input-wrap">
+          <span class="input-icon">✉️</span>
+          <input
+            type="email"
+            id="loginEmail"
+            class="auth-input"
+            placeholder="you@example.com"
+            autocomplete="email"
+          />
+        </div>
+        <div class="input-error" id="loginEmailError"></div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label class="form-label" for="loginPassword">Password</label>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input
+            type="password"
+            id="loginPassword"
+            class="auth-input"
+            placeholder="Your password"
+            autocomplete="current-password"
+          />
+          <button
+            class="toggle-password"
+            id="toggleLoginPass"
+            type="button"
+            onclick="togglePasswordVisibility('loginPassword', 'toggleLoginPass')"
+          >👁</button>
+        </div>
+        <div class="input-error" id="loginPassError"></div>
+      </div>
+
+      <!-- Submit -->
+      <button class="auth-btn auth-btn-primary" id="loginBtn" onclick="login()" style="margin-top:8px">
+        Sign In →
+      </button>
+
+      <!-- Divider -->
+      <div class="auth-divider">
+        <span>or</span>
+      </div>
+
+      <!-- Demo Login -->
+      <button class="auth-btn auth-btn-secondary" onclick="demoLogin()">
+        🎭 Try Demo Account
+      </button>
+
+      <!-- Footer -->
+      <p class="auth-footer">
+        Don't have an account? <a href="signup.html">Create one free</a>
+      </p>
+
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script>
+    // Demo login — creates a demo user and redirects
+    function demoLogin() {
+      const demo = { name: 'Demo User', email: 'demo@tasknest.app', password: 'demo123' };
+      localStorage.setItem('tasknest_user', JSON.stringify(demo));
+      localStorage.setItem('tasknest_logged_in', '1');
+
+      // Seed some demo data if none exists
+      if (!localStorage.getItem('tasknest_tasks')) {
+        const today = new Date().toISOString().split('T')[0];
+        const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+        const tasks = [
+          { id: 1, text: 'Review project proposal', priority: 'High',   deadline: today,     category: 'Work',     completed: false, createdAt: new Date().toISOString() },
+          { id: 2, text: 'Team standup meeting',    priority: 'Medium', deadline: today,     category: 'Work',     completed: true,  createdAt: new Date().toISOString(), completedDate: new Date().toDateString() },
+          { id: 3, text: 'Buy groceries',            priority: 'Low',    deadline: tomorrow,  category: 'Personal', completed: false, createdAt: new Date().toISOString() },
+          { id: 4, text: 'Read design system docs',  priority: 'Medium', deadline: tomorrow,  category: 'Learning', completed: false, createdAt: new Date().toISOString() },
+          { id: 5, text: 'Submit weekly report',     priority: 'High',   deadline: today,     category: 'Work',     completed: false, createdAt: new Date().toISOString() },
+        ];
+        localStorage.setItem('tasknest_tasks', JSON.stringify(tasks));
+      }
+      if (!localStorage.getItem('tasknest_notes')) {
+        const notes = [
+          { id: 1, title: 'Project Ideas', content: 'Brainstorm new features for Q2. Focus on user onboarding and analytics dashboard improvements.', tags: ['work', 'ideas'], pinned: true,  createdAt: new Date().toISOString() },
+          { id: 2, title: 'Reading List',  content: 'Atomic Habits, Deep Work, The Design of Everyday Things, Thinking Fast and Slow.', tags: ['books', 'learning'], pinned: false, createdAt: new Date().toISOString() },
+          { id: 3, title: 'Shopping',      content: 'Milk, eggs, bread, coffee beans, avocados, pasta, olive oil.', tags: ['personal'], pinned: false, createdAt: new Date().toISOString() },
+        ];
+        localStorage.setItem('tasknest_notes', JSON.stringify(notes));
+      }
+      window.location.href = 'index.html';
+    }
+
+    // Redirect if already logged in
+    if (localStorage.getItem('tasknest_logged_in')) {
+      window.location.href = 'index.html';
+    }
+  </script>
+</body>
+</html>
