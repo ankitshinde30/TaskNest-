@@ -1,208 +1,568 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <title>TaskNest Dashboard</title>
-
-  <link rel="stylesheet" href="css/dashboard.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskNest – Dashboard</title>
+  <link rel="stylesheet" href="css/dashboard.css" />
 </head>
-
 <body>
+<div class="app-wrapper">
 
-  <div class="d-flex">
-
-    <!-- SIDEBAR -->
-    <div id="sidebar" class="sidebar">
-    
-      <h4 class="text-center mb-4">TaskNest</h4>
-    
-      <ul class="nav flex-column">
-        <li class="nav-item"><a class="nav-link active" href="#">Dashboard</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Tasks</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Notes</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
-        <li class="nav-item">
-          <a class="nav-link" href="settings.html">Settings</a>
-        </li>
-      </ul>
-    
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🪺</div>
+      <span class="logo-text">TaskNest</span>
     </div>
 
-    <!-- MAIN -->
-    <div class="main-content w-100">
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-title">Main</div>
 
-      <!-- NAVBAR -->
-      <div class="navbar neu-card d-flex justify-content-between align-items-center p-3">
-
-        <button class="neu-btn" onclick="toggleSidebar()">☰</button>
-
-        <h5 id="welcomeText">Welcome 👋</h5>
-        <input id="globalSearch" class="neu-input w-50" placeholder="Search tasks, notes..." oninput="globalSearch()">
-        <div class="container mt-3">
-          <div id="searchResults" class="neu-card p-3"></div>
-        </div>
-
-        <button class="neu-btn" onclick="toggleTheme()">🌙</button>
-
+      <div class="nav-item active" data-page="dashboard" onclick="showPage('dashboard')">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Dashboard</span>
+      </div>
+      <div class="nav-item" data-page="tasks" onclick="showPage('tasks')">
+        <span class="nav-icon">✅</span>
+        <span class="nav-label">Tasks</span>
+        <span class="nav-badge" id="taskNavBadge">0</span>
+      </div>
+      <div class="nav-item" data-page="notes" onclick="showPage('notes')">
+        <span class="nav-icon">📝</span>
+        <span class="nav-label">Notes</span>
+      </div>
+      <div class="nav-item" data-page="calendar" onclick="showPage('calendar')">
+        <span class="nav-icon">📅</span>
+        <span class="nav-label">Calendar</span>
+      </div>
+      <div class="nav-item" data-page="analytics" onclick="showPage('analytics')">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">Analytics</span>
       </div>
 
-      <!-- DASHBOARD -->
-      <div class="container mt-4">
+      <div class="sidebar-section-title" style="margin-top:16px">Account</div>
+      <a class="nav-item" href="settings.html">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">Settings</span>
+      </a>
+      <div class="nav-item" onclick="logout()">
+        <span class="nav-icon">🚪</span>
+        <span class="nav-label">Logout</span>
+      </div>
+    </nav>
 
-        <div class="row g-4">
+    <div class="sidebar-user">
+      <div class="user-avatar" id="userAvatar">U</div>
+      <div class="user-info">
+        <div class="user-name" id="userName">User</div>
+        <div class="user-role">Free Plan</div>
+      </div>
+    </div>
+  </aside>
 
-          <!-- Progress -->
-          <div class="col-md-4">
-            <div class="neu-card p-3">
-              <h6>Progress</h6>
-              <div class="progress mt-2">
-                <div class="progress-bar" id="progressBar"></div>
+  <!-- ===================== MAIN ===================== -->
+  <div class="main-content" id="mainContent">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <button class="topbar-toggle" onclick="toggleSidebar()">☰</button>
+
+      <div class="topbar-search">
+        <span class="topbar-search-icon">🔍</span>
+        <input
+          type="text"
+          id="globalSearchInput"
+          placeholder="Search tasks, notes… (Ctrl+K)"
+          oninput="globalSearch()"
+        />
+        <div class="search-results-dropdown" id="searchDropdown"></div>
+      </div>
+
+      <span class="topbar-greeting" id="welcomeText">Welcome 👋</span>
+
+      <div class="topbar-right">
+        <button class="topbar-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+        <a href="settings.html" class="topbar-btn" title="Settings">⚙️</a>
+        <button class="topbar-btn" onclick="logout()" title="Logout">🚪</button>
+      </div>
+    </header>
+
+    <!-- ========== PAGE: DASHBOARD ========== -->
+    <div class="page-content active" id="page-dashboard">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Dashboard</div>
+          <div class="section-subtitle" id="todayDate"></div>
+        </div>
+        <button class="btn btn-primary" onclick="showPage('tasks')">+ New Task</button>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="grid grid-4" style="margin-bottom:20px">
+        <div class="stat-card purple">
+          <div class="stat-icon purple">📋</div>
+          <div class="stat-value" id="statTotal">0</div>
+          <div class="stat-label">Total Tasks</div>
+        </div>
+        <div class="stat-card cyan">
+          <div class="stat-icon cyan">✅</div>
+          <div class="stat-value" id="statCompleted">0</div>
+          <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat-card emerald">
+          <div class="stat-icon emerald">⏳</div>
+          <div class="stat-value" id="statPending">0</div>
+          <div class="stat-label">Pending</div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-icon amber">📅</div>
+          <div class="stat-value" id="statToday">0</div>
+          <div class="stat-label">Due Today</div>
+        </div>
+      </div>
+
+      <!-- Row: Progress + Today's Tasks + Streak -->
+      <div class="grid" style="grid-template-columns:1fr 2fr 1fr;margin-bottom:20px">
+
+        <!-- Progress Ring -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Completion</div></div>
+          <div class="card-body">
+            <div class="progress-ring-container">
+              <div class="progress-ring">
+                <svg width="120" height="120" viewBox="0 0 120 120">
+                  <defs>
+                    <linearGradient id="progressGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%"   stop-color="#7c3aed" />
+                      <stop offset="100%" stop-color="#06b6d4" />
+                    </linearGradient>
+                  </defs>
+                  <circle class="track" cx="60" cy="60" r="52" />
+                  <circle class="fill"  cx="60" cy="60" r="52"
+                    stroke-dasharray="326.7"
+                    stroke-dashoffset="326.7"
+                  />
+                </svg>
+                <div class="progress-ring-text">
+                  <div class="progress-ring-pct" id="progressPct">0%</div>
+                  <div class="progress-ring-label">Done</div>
+                </div>
               </div>
+              <div style="margin-top:12px;font-size:13px;color:var(--text-muted);text-align:center">of all tasks complete</div>
             </div>
           </div>
-
-          <!-- Tasks -->
-          <div class="col-md-6">
-            <div class="neu-card p-3">
-
-              <h5>Task Manager</h5>
-
-              <!-- ADD TASK -->
-              <div class="d-flex gap-2 mb-3">
-                <input id="taskInput" class="neu-input w-100" placeholder="New Task">
-
-                <select id="priority" class="neu-input">
-                  <option>Low</option>
-                  <option>Medium</option>
-                  <option>High</option>
-                </select>
-
-                <input type="date" id="deadline" class="neu-input">
-
-                <button class="neu-btn" onclick="addTask()">+</button>
-              </div>
-
-              <!-- FILTER -->
-              <div class="d-flex gap-2 mb-3">
-                <button class="neu-btn" onclick="filterTasks('all')">All</button>
-                <button class="neu-btn" onclick="filterTasks('completed')">Done</button>
-                <button class="neu-btn" onclick="filterTasks('pending')">Pending</button>
-              </div>
-
-              <!-- TASK LIST -->
-              <ul id="taskList"></ul>
-
-              <p id="emptyState" class="text-center mt-3"></p>
-
-            </div>
-          </div>
-
-          <!-- Notes -->
-          <div class="col-md-6">
-            <div class="neu-card p-3">
-
-              <h5>Notes</h5>
-
-              <!-- ADD NOTE -->
-              <div class="mb-3">
-                <input id="noteTitle" class="neu-input w-100 mb-2" placeholder="Title">
-                <textarea id="noteContent" class="neu-input w-100 mb-2" placeholder="Write note..."></textarea>
-                <input id="noteTags" class="neu-input w-100 mb-2" placeholder="Tags (comma separated)">
-                <button class="neu-btn w-100" onclick="addNote()">Add Note</button>
-              </div>
-
-              <!-- SEARCH -->
-              <input id="searchNote" class="neu-input w-100 mb-3" placeholder="Search notes..." oninput="searchNotes()">
-
-              <!-- NOTES LIST -->
-              <div id="notesList"></div>
-
-              <p id="notesEmpty" class="text-center mt-3"></p>
-
-            </div>
-          </div>
-
         </div>
 
-      </div>
-      <div class="container mt-4">
-
-        <div class="neu-card p-3">
-
-          <h5>Calendar</h5>
-
-          <!-- HEADER -->
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <button class="neu-btn" onclick="changeMonth(-1)">⬅</button>
-            <h6 id="monthYear"></h6>
-            <button class="neu-btn" onclick="changeMonth(1)">➡</button>
+        <!-- Today's Tasks -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">📅 Today's Tasks</div>
+            <button class="btn btn-ghost btn-sm" onclick="showPage('tasks')">View all →</button>
           </div>
+          <div class="card-body">
+            <div id="todayTaskList"></div>
+          </div>
+        </div>
 
-          <!-- CALENDAR GRID -->
-          <div id="calendar" class="calendar-grid"></div>
-
+        <!-- Streak -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">🔥 Streak</div></div>
+          <div class="card-body" style="text-align:center">
+            <div class="streak-card" style="flex-direction:column;text-align:center">
+              <div class="streak-flame">🔥</div>
+              <div class="streak-count" id="streakCount">0</div>
+              <div style="font-size:13px;color:var(--text-muted);margin-top:4px">day streak</div>
+            </div>
+            <div style="margin-top:16px;font-size:12px;color:var(--text-muted)">
+              Complete tasks daily to build your streak!
+            </div>
+          </div>
         </div>
 
       </div>
 
-      <!-- TODAY TASKS -->
-      <div class="container mt-3">
-        <div class="neu-card p-3">
-          <h6>Today's Tasks</h6>
-          <ul id="todayTasks"></ul>
+      <!-- Quick Add Task -->
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-header"><div class="card-title">⚡ Quick Add Task</div></div>
+        <div class="card-body">
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <input id="taskInput" class="input" style="flex:1;min-width:200px" placeholder="What needs to be done?" />
+            <select id="taskPriority" class="input" style="width:120px">
+              <option>Medium</option>
+              <option>High</option>
+              <option>Low</option>
+            </select>
+            <select id="taskCategory" class="input" style="width:130px">
+              <option>General</option>
+              <option>Work</option>
+              <option>Personal</option>
+              <option>Learning</option>
+              <option>Health</option>
+            </select>
+            <input id="taskDeadline" type="date" class="input" style="width:160px" />
+            <button class="btn btn-primary" onclick="addTask()">+ Add Task</button>
+          </div>
         </div>
       </div>
-      <div class="container mt-4">
 
-        <div class="row g-4">
-
-          <!-- STATS -->
-          <div class="col-md-4">
-            <div class="neu-card p-3 text-center">
-              <h6>Total Tasks</h6>
-              <h3 id="totalTasks">0</h3>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="neu-card p-3 text-center">
-              <h6>Completed</h6>
-              <h3 id="completedTasks">0</h3>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="neu-card p-3 text-center">
-              <h6>Pending</h6>
-              <h3 id="pendingTasks">0</h3>
-            </div>
-          </div>
-
+      <!-- Recent Tasks preview -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Recent Tasks</div>
+          <button class="btn btn-ghost btn-sm" onclick="showPage('tasks')">View all →</button>
         </div>
-
-        <!-- CHART -->
-        <div class="neu-card p-3 mt-4">
-          <h6>Weekly Productivity</h6>
-          <canvas id="chart"></canvas>
+        <div class="card-body">
+          <ul class="task-list" id="taskList"></ul>
         </div>
-
       </div>
-
     </div>
 
+    <!-- ========== PAGE: TASKS ========== -->
+    <div class="page-content" id="page-tasks">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Task Manager</div>
+          <div class="section-subtitle">Organize, prioritize, and track your work</div>
+        </div>
+      </div>
+
+      <!-- Add Task Form -->
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-body">
+          <div class="grid grid-2" style="gap:12px;margin-bottom:12px">
+            <div>
+              <label class="label">Task Name</label>
+              <input id="taskInputFull" class="input" placeholder="What needs to be done?" />
+            </div>
+            <div>
+              <label class="label">Category</label>
+              <select id="taskCategoryFull" class="input">
+                <option>General</option>
+                <option>Work</option>
+                <option>Personal</option>
+                <option>Learning</option>
+                <option>Health</option>
+                <option>Finance</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <div style="flex:1;min-width:140px">
+              <label class="label">Priority</label>
+              <select id="taskPriorityFull" class="input">
+                <option>Medium</option>
+                <option>High</option>
+                <option>Low</option>
+              </select>
+            </div>
+            <div style="flex:1;min-width:160px">
+              <label class="label">Deadline</label>
+              <input type="date" id="taskDeadlineFull" class="input" />
+            </div>
+            <div style="display:flex;align-items:flex-end">
+              <button class="btn btn-primary" onclick="addTaskFull()">+ Add Task</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+        <div class="filter-pills">
+          <div class="pill task-filter-pill active" data-filter="all"       onclick="filterTasks('all')">All</div>
+          <div class="pill task-filter-pill"         data-filter="pending"  onclick="filterTasks('pending')">Pending</div>
+          <div class="pill task-filter-pill"         data-filter="completed"onclick="filterTasks('completed')">Completed</div>
+          <div class="pill task-filter-pill"         data-filter="high"     onclick="filterTasks('high')">🔴 High</div>
+          <div class="pill task-filter-pill"         data-filter="today"    onclick="filterTasks('today')">📅 Today</div>
+        </div>
+      </div>
+
+      <!-- Task List -->
+      <div class="card">
+        <div class="card-body">
+          <ul class="task-list" id="taskListFull"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== PAGE: NOTES ========== -->
+    <div class="page-content" id="page-notes">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Notes</div>
+          <div class="section-subtitle">Capture ideas, thoughts, and references</div>
+        </div>
+      </div>
+
+      <!-- Add Note -->
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-body">
+          <div class="grid grid-2" style="gap:12px;margin-bottom:12px">
+            <div>
+              <label class="label">Title</label>
+              <input id="noteTitle" class="input" placeholder="Note title…" />
+            </div>
+            <div>
+              <label class="label">Tags</label>
+              <input id="noteTags" class="input" placeholder="work, ideas, personal…" />
+            </div>
+          </div>
+          <label class="label">Content</label>
+          <textarea id="noteContent" class="input" style="margin-bottom:12px" placeholder="Write your note here…"></textarea>
+          <button class="btn btn-primary" onclick="addNote()">+ Save Note</button>
+        </div>
+      </div>
+
+      <!-- Search -->
+      <div style="position:relative;margin-bottom:20px">
+        <input
+          id="noteSearchInput"
+          class="input"
+          style="padding-left:40px"
+          placeholder="Search notes by title, content, or tags…"
+          oninput="searchNotes()"
+        />
+        <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted)">🔍</span>
+      </div>
+
+      <!-- Notes Grid -->
+      <div class="notes-grid" id="notesList"></div>
+    </div>
+
+    <!-- ========== PAGE: CALENDAR ========== -->
+    <div class="page-content" id="page-calendar">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Calendar</div>
+          <div class="section-subtitle">View and manage tasks by date</div>
+        </div>
+      </div>
+
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:20px">
+
+        <!-- Calendar Widget -->
+        <div class="card">
+          <div class="card-body">
+            <div class="calendar-nav">
+              <button class="btn btn-secondary btn-sm" onclick="changeMonth(-1)">← Prev</button>
+              <span class="calendar-month" id="calMonthYear"></span>
+              <button class="btn btn-secondary btn-sm" onclick="changeMonth(1)">Next →</button>
+            </div>
+            <div class="calendar-grid-header" id="calDayHeaders"></div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+          </div>
+        </div>
+
+        <!-- Selected Day Tasks -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" id="calDayLabel">Select a day</div>
+          </div>
+          <div class="card-body">
+            <div style="display:flex;gap:8px;margin-bottom:16px">
+              <input id="calTaskInput" class="input" placeholder="Add task for this day…" />
+              <button class="btn btn-primary" onclick="addCalendarTask()">+</button>
+            </div>
+            <div id="calDayTasks">
+              <div class="empty-state">
+                <div class="empty-icon">📅</div>
+                <div class="empty-title">Click a day to view tasks</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========== PAGE: ANALYTICS ========== -->
+    <div class="page-content" id="page-analytics">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Analytics</div>
+          <div class="section-subtitle">Track your productivity over time</div>
+        </div>
+      </div>
+
+      <!-- Analytics Stats -->
+      <div class="grid grid-4" style="margin-bottom:20px">
+        <div class="stat-card purple">
+          <div class="stat-icon purple">📋</div>
+          <div class="stat-value" id="analyticsTotal">0</div>
+          <div class="stat-label">Total Tasks</div>
+        </div>
+        <div class="stat-card cyan">
+          <div class="stat-icon cyan">🎯</div>
+          <div class="stat-value" id="analyticsRate">0%</div>
+          <div class="stat-label">Completion Rate</div>
+        </div>
+        <div class="stat-card emerald">
+          <div class="stat-icon emerald">⏱</div>
+          <div class="stat-value" id="analyticsAvgDays">0d</div>
+          <div class="stat-label">Avg. Completion</div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-icon amber" style="background:rgba(244,63,94,0.15)">⚠️</div>
+          <div class="stat-value" id="analyticsOverdue" style="color:var(--rose)">0</div>
+          <div class="stat-label">Overdue</div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="grid grid-2" style="margin-bottom:20px">
+        <div class="card">
+          <div class="card-header"><div class="card-title">📈 Weekly Productivity</div></div>
+          <div class="card-body">
+            <div class="chart-wrapper"><canvas id="weeklyChart"></canvas></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">🎯 Priority Breakdown</div></div>
+          <div class="card-body">
+            <div class="chart-wrapper"><canvas id="priorityChart"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-content -->
+</div><!-- /app-wrapper -->
+
+<!-- ============ TOAST CONTAINER ============ -->
+<div id="toastContainer" class="toast-container"></div>
+
+<!-- ============ EDIT TASK MODAL ============ -->
+<div class="modal-overlay" id="editTaskModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">✏️ Edit Task</div>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal()">✕</button>
+    </div>
+    <div class="form-group" style="margin-bottom:12px">
+      <label class="label">Task Name</label>
+      <input id="editTaskText" class="input" />
+    </div>
+    <div class="grid grid-2" style="gap:12px;margin-bottom:12px">
+      <div>
+        <label class="label">Priority</label>
+        <select id="editTaskPriority" class="input">
+          <option>High</option>
+          <option>Medium</option>
+          <option>Low</option>
+        </select>
+      </div>
+      <div>
+        <label class="label">Category</label>
+        <select id="editTaskCategory" class="input">
+          <option>General</option>
+          <option>Work</option>
+          <option>Personal</option>
+          <option>Learning</option>
+          <option>Health</option>
+          <option>Finance</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-bottom:20px">
+      <label class="label">Deadline</label>
+      <input type="date" id="editTaskDeadline" class="input" />
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-secondary btn-full" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary btn-full" id="editSaveBtn">Save Changes</button>
+    </div>
   </div>
-  <div id="toastContainer" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+</div>
 
-  <script src="js/dashboard.js"></script>
-  <script src="js/tasks.js"></script>
-  <script src="js/notes.js"></script>
-  <script src="js/search.js"></script>
-  <script src="js/calendar.js"></script>
-  <script src="js/analytics.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="js/ui.js"></script>
+<!-- ============ EDIT NOTE MODAL ============ -->
+<div class="modal-overlay" id="editNoteModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">✏️ Edit Note</div>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal()">✕</button>
+    </div>
+    <div style="margin-bottom:12px">
+      <label class="label">Title</label>
+      <input id="editNoteTitle" class="input" />
+    </div>
+    <div style="margin-bottom:12px">
+      <label class="label">Content</label>
+      <textarea id="editNoteContent" class="input" style="min-height:100px"></textarea>
+    </div>
+    <div style="margin-bottom:20px">
+      <label class="label">Tags</label>
+      <input id="editNoteTags" class="input" placeholder="tag1, tag2, tag3" />
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-secondary btn-full" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary btn-full" id="editNoteSaveBtn">Save Note</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCRIPTS ============ -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/tasks.js"></script>
+<script src="js/notes.js"></script>
+<script src="js/search.js"></script>
+<script src="js/calendar.js"></script>
+<script src="js/analytics.js"></script>
+<script src="js/dashboard.js"></script>
+
+<!-- Patch: tasks page uses separate IDs -->
+<script>
+  // Wire up the Tasks page full form to shared addTask
+  function addTaskFull() {
+    // Temporarily swap IDs so addTask() reads the full-page inputs
+    const map = {
+      taskInput:    'taskInputFull',
+      taskPriority: 'taskPriorityFull',
+      taskDeadline: 'taskDeadlineFull',
+      taskCategory: 'taskCategoryFull',
+    };
+    // Store originals
+    const originals = {};
+    for (const [key, fullId] of Object.entries(map)) {
+      originals[key] = document.getElementById(key);
+      const fullEl   = document.getElementById(fullId);
+      if (fullEl) fullEl.id = key;
+    }
+    addTask();
+    // Restore IDs
+    for (const [key, fullId] of Object.entries(map)) {
+      const el = document.getElementById(key);
+      if (el) el.id = fullId;
+    }
+  }
+
+  // Patch renderTasks to also fill taskListFull
+  const _origRenderTasks = renderTasks;
+  window.renderTasks = function () {
+    _origRenderTasks();
+    const list = document.getElementById('taskList');
+    const listFull = document.getElementById('taskListFull');
+    if (list && listFull) {
+      listFull.innerHTML = list.innerHTML;
+    }
+  };
+
+  // Today's date in section subtitle
+  document.addEventListener('DOMContentLoaded', () => {
+    const el = document.getElementById('todayDate');
+    if (el) el.textContent = new Date().toLocaleDateString('en-US', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+
+    // Set today as default deadline
+    const today = new Date().toISOString().split('T')[0];
+    const d1 = document.getElementById('taskDeadline');
+    const d2 = document.getElementById('taskDeadlineFull');
+    if (d1) d1.value = today;
+    if (d2) d2.value = today;
+  });
+</script>
+
 </body>
-
 </html>
