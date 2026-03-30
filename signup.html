@@ -2,61 +2,153 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>TaskNest - Signup</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskNest – Create Account</title>
   <link rel="stylesheet" href="css/auth.css" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-
 <body>
 
-<div class="auth-container d-flex justify-content-center align-items-center vh-100">
+  <div class="auth-wrapper">
+    <div class="auth-card">
 
-  <div class="neu-card p-4" style="width: 400px;">
-
-    <h3 class="text-center mb-4">TaskNest Signup</h3>
-
-    <!-- Progress Bar -->
-    <div class="progress mb-4">
-      <div id="progressBar" class="progress-bar"></div>
-    </div>
-
-    <!-- Step 1 -->
-    <div class="form-step active">
-      <input type="text" id="name" class="neu-input w-100 mb-3" placeholder="Full Name">
-      <input type="email" id="email" class="neu-input w-100 mb-3" placeholder="Email">
-      <button class="neu-btn w-100" onclick="nextStep()">Next</button>
-    </div>
-
-    <!-- Step 2 -->
-    <div class="form-step">
-      <input type="password" id="password" class="neu-input w-100 mb-2" placeholder="Password">
-      <div id="strength" class="mb-2 small"></div>
-
-      <input type="password" id="confirmPassword" class="neu-input w-100 mb-3" placeholder="Confirm Password">
-
-      <div class="d-flex gap-2">
-        <button class="neu-btn w-50" onclick="prevStep()">Back</button>
-        <button class="neu-btn w-50" onclick="nextStep()">Next</button>
+      <!-- Logo -->
+      <div class="auth-logo">
+        <div class="auth-logo-icon">🪺</div>
+        <span class="auth-logo-text">TaskNest</span>
       </div>
-    </div>
 
-    <!-- Step 3 -->
-    <div class="form-step">
-      <p id="review"></p>
-
-      <div class="d-flex gap-2">
-        <button class="neu-btn w-50" onclick="prevStep()">Back</button>
-        <button class="neu-btn w-50" onclick="submitForm()">Submit</button>
+      <!-- Step Progress -->
+      <div class="step-progress">
+        <div class="step-dot active" id="stepDot1">1</div>
+        <div class="step-line" id="stepLine1"></div>
+        <div class="step-dot" id="stepDot2">2</div>
+        <div class="step-line" id="stepLine2"></div>
+        <div class="step-dot" id="stepDot3">3</div>
       </div>
+
+      <!-- ---- STEP 1: Identity ---- -->
+      <div class="form-step active" id="step1">
+        <h1 class="auth-title">Create account</h1>
+        <p class="auth-subtitle">Let's start with your name and email</p>
+
+        <div class="form-group">
+          <label class="form-label" for="signupName">Full Name</label>
+          <div class="input-wrap">
+            <span class="input-icon">👤</span>
+            <input
+              type="text"
+              id="signupName"
+              class="auth-input"
+              placeholder="John Doe"
+              autocomplete="name"
+            />
+          </div>
+          <div class="input-error" id="nameError"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="signupEmail">Email Address</label>
+          <div class="input-wrap">
+            <span class="input-icon">✉️</span>
+            <input
+              type="email"
+              id="signupEmail"
+              class="auth-input"
+              placeholder="you@example.com"
+              autocomplete="email"
+            />
+          </div>
+          <div class="input-error" id="emailError"></div>
+        </div>
+
+        <button class="auth-btn auth-btn-primary" onclick="nextStep()">
+          Continue →
+        </button>
+      </div>
+
+      <!-- ---- STEP 2: Password ---- -->
+      <div class="form-step" id="step2">
+        <h1 class="auth-title">Set password</h1>
+        <p class="auth-subtitle">Create a strong password for your account</p>
+
+        <div class="form-group">
+          <label class="form-label" for="signupPassword">Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input
+              type="password"
+              id="signupPassword"
+              class="auth-input"
+              placeholder="Min. 6 characters"
+              oninput="checkPasswordStrength()"
+              autocomplete="new-password"
+            />
+            <button
+              class="toggle-password"
+              id="toggleSignupPass"
+              type="button"
+              onclick="togglePasswordVisibility('signupPassword', 'toggleSignupPass')"
+            >👁</button>
+          </div>
+          <div class="strength-bar">
+            <div class="strength-segment" id="seg1"></div>
+            <div class="strength-segment" id="seg2"></div>
+            <div class="strength-segment" id="seg3"></div>
+          </div>
+          <div class="strength-label" id="strengthLabel"></div>
+          <div class="input-error" id="passError"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="signupConfirm">Confirm Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔑</span>
+            <input
+              type="password"
+              id="signupConfirm"
+              class="auth-input"
+              placeholder="Repeat your password"
+              autocomplete="new-password"
+            />
+          </div>
+          <div class="input-error" id="confirmError"></div>
+        </div>
+
+        <div class="auth-btn-row">
+          <button class="auth-btn auth-btn-secondary" onclick="prevStep()">← Back</button>
+          <button class="auth-btn auth-btn-primary"   onclick="nextStep()">Continue →</button>
+        </div>
+      </div>
+
+      <!-- ---- STEP 3: Review ---- -->
+      <div class="form-step" id="step3">
+        <h1 class="auth-title">Look good?</h1>
+        <p class="auth-subtitle">Review your details before creating your account</p>
+
+        <div class="review-box" id="reviewBox">
+          <!-- Populated by JS -->
+        </div>
+
+        <div class="auth-btn-row">
+          <button class="auth-btn auth-btn-secondary" onclick="prevStep()">← Edit</button>
+          <button class="auth-btn auth-btn-primary"   onclick="submitForm()">Create Account 🎉</button>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <p class="auth-footer">
+        Already have an account? <a href="login.html">Sign in</a>
+      </p>
+
     </div>
-
-    <p class="text-center mt-3">
-      Already have an account? <a href="login.html">Login</a>
-    </p>
-
   </div>
-</div>
 
-<script src="js/auth.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // Redirect if already logged in
+    if (localStorage.getItem('tasknest_logged_in')) {
+      window.location.href = 'index.html';
+    }
+  </script>
 </body>
 </html>
