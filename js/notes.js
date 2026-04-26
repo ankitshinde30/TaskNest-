@@ -1,155 +1,199 @@
-let notes = JSON.parse(localStorage.getItem("notes")) || [];
-let searchQuery = "";
+// ============================================
+// TaskNest - Notes JS
+// ============================================
 
-/* SAVE */
-function saveNotes() {
-  localStorage.setItem("notes", JSON.stringify(notes));
+let noteSearchQuery = '';
+
+// ---- Data ----
+function getNotes() {
+  return JSON.parse(localStorage.getItem('tasknest_notes') || '[]');
 }
 
-/* ADD NOTE */
+function saveNotes(notes) {
+  localStorage.setItem('tasknest_notes', JSON.stringify(notes));
+}
+
+// ---- Add Note ----
 function addNote() {
-  const title = document.getElementById("noteTitle").value;
-  const content = document.getElementById("noteContent").value;
-  const tags = document.getElementById("noteTags").value.split(",");
+  const titleEl   = document.getElementById('noteTitle');
+  const contentEl = document.getElementById('noteContent');
+  const tagsEl    = document.getElementById('noteTags');
 
-  if (!title || !content) return showToast("Fill all fields ⚠️");
+  const title   = titleEl   ? titleEl.value.trim()   : '';
+  const content = contentEl ? contentEl.value.trim() : '';
+  const tagsRaw = tagsEl    ? tagsEl.value.trim()    : '';
 
-  notes.push({
-    id: Date.now(),
-    title,
-    content,
-    tags,
-    pinned: false
-  });
-
-  saveNotes();
-  renderNotes();
-}
-
-/* DELETE */
-function deleteNote(id) {
-  notes = notes.filter(n => n.id !== id);
-  saveNotes();
-  renderNotes();
-}
-
-/* PIN */
-function togglePin(id) {
-  notes = notes.map(n =>
-    n.id === id ? { ...n, pinned: !n.pinned } : n
-  );
-
-  saveNotes();
-  renderNotes();
-}
-
-/* EDIT */
-function editNote(id) {
-  const note = notes.find(n => n.id === id);
-
-  document.getElementById("noteTitle").value = note.title;
-  document.getElementById("noteContent").value = note.content;
-  document.getElementById("noteTags").value = note.tags.join(",");
-
-  deleteNote(id);
-}
-
-/* SEARCH */
-function searchNotes() {
-  searchQuery = document.getElementById("searchNote").value.toLowerCase();
-  renderNotes();
-}
-
-/* CONVERT TO TASK */
-function convertToTask(note) {
-  let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-
-  tasks.push({
-    id: Date.now(),
-    text: note.title,
-    priority: "Medium",
-    deadline: "",
-    completed: false
-  });
-
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-
-  alert("Converted to Task ✅");
-}
-
-/* RENDER */
-function renderNotes() {
-  const container = document.getElementById("notesList");
-  const empty = document.getElementById("notesEmpty");
-
-  container.innerHTML = "";
-
-  let filtered = notes.filter(n =>
-    n.title.toLowerCase().includes(searchQuery) ||
-    n.content.toLowerCase().includes(searchQuery)
-  );
-
-  /* PINNED FIRST */
-  filtered.sort((a, b) => b.pinned - a.pinned);
-
-  if (filtered.length === 0) {
-    empty.innerHTML = `
-  <div class="text-center p-3">
-    <h6>No notes yet 📝</h6>
-    <p>Create your first note</p>
-  </div>
-`;
+  if (!title && !content) {
+    showToast('Note needs a title or content!', 'error');
     return;
-  } else {
-    empty.innerText = "";
   }
 
-  filtered.forEach(n => {
-    const div = document.createElement("div");
-    div.classList.add("fade-in");
+  const tags = tagsRaw
+    ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean)
+    : [];
 
-    div.className = `note-card ${n.pinned ? "pinned" : ""}`;
+  const note = {
+    id:        Date.now(),
+    title:     title || 'Untitled',
+    content:   content,
+    tags:      tags,
+    pinned:    false,
+    color:     getRandomNoteColor(),
+    createdAt: new Date().toISOString(),
+  };
 
-    div.innerHTML = `
-      <h6>${n.title}</h6>
-      <p>${n.content}</p>
+  const notes = getNotes();
+  notes.unshift(note);
+  saveNotes(notes);
 
-      <div>
-        ${n.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}
-      </div>
+  if (titleEl)   titleEl.value   = '';
+  if (contentEl) contentEl.value = '';
+  if (tagsEl)    tagsEl.value    = '';
 
-      <div class="mt-2">
-        <button onclick="togglePin(${n.id})">📌</button>
-        <button onclick="editNote(${n.id})">✏️</button>
-        <button onclick="deleteNote(${n.id})">🗑</button>
-        <button onclick='convertToTask(${JSON.stringify(n)})'>➡️ Task</button>
-      </div>
-    `;
-
-    container.appendChild(div);
-  });
+  renderNotes();
+  showToast('Note saved! 📝', 'success');
 }
 
-/* AUTO SAVE (while typing) */
-["noteTitle", "noteContent", "noteTags"].forEach(id => {
-  document.getElementById(id).addEventListener("input", () => {
-    localStorage.setItem("draft_note", JSON.stringify({
-      title: noteTitle.value,
-      content: noteContent.value,
-      tags: noteTags.value
-    }));
-  });
-});
+// ---- Toggle Pin ----
+function togglePinNote(id) {
+  const notes = getNotes();
+  const note  = notes.find(n => n.id === id);
+  if (!note) return;
 
-/* LOAD DRAFT */
-(function () {
-  const draft = JSON.parse(localStorage.getItem("draft_note"));
-  if (draft) {
-    noteTitle.value = draft.title;
-    noteContent.value = draft.content;
-    noteTags.value = draft.tags;
+  note.pinned = !note.pinned;
+  saveNotes(notes);
+  renderNotes();
+  showToast(note.pinned ? 'Note pinned! 📌' : 'Note unpinned.', 'info');
+}
+
+// ---- Delete Note ----
+function deleteNote(id) {
+  const notes = getNotes().filter(n => n.id !== id);
+  saveNotes(notes);
+  renderNotes();
+  showToast('Note deleted.', 'info');
+}
+
+// ---- Edit Note ----
+function editNote(id) {
+  const notes = getNotes();
+  const note  = notes.find(n => n.id === id);
+  if (!note) return;
+
+  const overlay = document.getElementById('editNoteModal');
+  if (!overlay) return;
+
+  document.getElementById('editNoteTitle').value   = note.title;
+  document.getElementById('editNoteContent').value = note.content;
+  document.getElementById('editNoteTags').value    = note.tags.join(', ');
+  document.getElementById('editNoteSaveBtn').onclick = () => saveEditNote(id);
+
+  overlay.classList.add('open');
+}
+
+function saveEditNote(id) {
+  const notes = getNotes();
+  const note  = notes.find(n => n.id === id);
+  if (!note) return;
+
+  note.title   = document.getElementById('editNoteTitle').value.trim() || 'Untitled';
+  note.content = document.getElementById('editNoteContent').value.trim();
+  const tagsRaw = document.getElementById('editNoteTags').value.trim();
+  note.tags    = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
+
+  saveNotes(notes);
+  closeModal();
+  renderNotes();
+  showToast('Note updated! ✏️', 'success');
+}
+
+// ---- Search ----
+function searchNotes() {
+  const q = document.getElementById('noteSearchInput');
+  noteSearchQuery = q ? q.value.toLowerCase() : '';
+  renderNotes();
+}
+
+// ---- Render ----
+function renderNotes() {
+  const grid = document.getElementById('notesList');
+  if (!grid) return;
+
+  let notes = getNotes();
+
+  // Filter by search
+  if (noteSearchQuery) {
+    notes = notes.filter(n =>
+      n.title.toLowerCase().includes(noteSearchQuery) ||
+      n.content.toLowerCase().includes(noteSearchQuery) ||
+      n.tags.some(t => t.toLowerCase().includes(noteSearchQuery))
+    );
   }
-})();
 
-/* INIT */
-renderNotes();
+  // Pinned first
+  notes.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+
+  if (notes.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state" style="grid-column:1/-1">
+        <div class="empty-icon">📓</div>
+        <div class="empty-title">${noteSearchQuery ? 'No notes found' : 'No notes yet'}</div>
+        <div class="empty-desc">${noteSearchQuery ? 'Try a different search term' : 'Create your first note!'}</div>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = notes.map(note => `
+    <div class="note-card ${note.pinned ? 'pinned' : ''}">
+      ${note.pinned ? '<span class="note-pin">📌</span>' : ''}
+      <div class="note-title">${escapeHtml(note.title)}</div>
+      <div class="note-content">${escapeHtml(note.content) || '<em style="color:var(--text-muted)">No content</em>'}</div>
+      ${note.tags.length ? `
+        <div class="note-tags">
+          ${note.tags.map(t => `<span class="note-tag">#${escapeHtml(t)}</span>`).join('')}
+        </div>` : ''}
+      <div class="note-footer">
+        <span class="note-time">${formatTimeAgo(note.createdAt)}</span>
+        <div class="note-actions">
+          <button class="btn btn-ghost btn-icon btn-sm" onclick="togglePinNote(${note.id})" title="${note.pinned ? 'Unpin' : 'Pin'}">
+            ${note.pinned ? '📍' : '📌'}
+          </button>
+          <button class="btn btn-ghost btn-icon btn-sm" onclick="editNote(${note.id})" title="Edit">✏️</button>
+          <button class="btn btn-ghost btn-icon btn-sm" onclick="deleteNote(${note.id})" title="Delete" style="color:var(--rose)">🗑️</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ---- Helpers ----
+function formatTimeAgo(isoStr) {
+  if (!isoStr) return '';
+  const diff = Date.now() - new Date(isoStr).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1)   return 'Just now';
+  if (mins < 60)  return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24)   return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  if (days < 30)  return `${days}d ago`;
+  return new Date(isoStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function getRandomNoteColor() {
+  const colors = ['purple', 'cyan', 'emerald', 'amber', 'rose'];
+  return colors[Math.floor(Math.random() * colors.length)];
+}
+
+// Enter key shortcut for note title
+document.addEventListener('DOMContentLoaded', () => {
+  const noteTitleInput = document.getElementById('noteTitle');
+  if (noteTitleInput) {
+    noteTitleInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const contentEl = document.getElementById('noteContent');
+        if (contentEl) contentEl.focus();
+      }
+    });
+  }
+});
