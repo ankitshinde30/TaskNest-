@@ -1,100 +1,80 @@
-/* GLOBAL SEARCH */
+// ============================================
+// TaskNest - Global Search JS
+// ============================================
+
 function globalSearch() {
-  const query = document.getElementById("globalSearch").value.toLowerCase();
+  const input    = document.getElementById('globalSearchInput');
+  const dropdown = document.getElementById('searchDropdown');
+  if (!input || !dropdown) return;
 
-  const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-  const notes = JSON.parse(localStorage.getItem("notes")) || [];
-
-  const resultsDiv = document.getElementById("searchResults");
+  const query = input.value.trim().toLowerCase();
 
   if (!query) {
-    resultsDiv.innerHTML = "";
+    dropdown.classList.remove('show');
+    dropdown.innerHTML = '';
     return;
   }
 
-  let results = [];
-
-  /* SEARCH TASKS */
-  tasks.forEach(t => {
-    if (t.text.toLowerCase().includes(query)) {
-      results.push({
-        type: "Task",
-        title: t.text
-      });
-    }
-  });
-
-  /* SEARCH NOTES */
-  notes.forEach(n => {
-    if (
-      n.title.toLowerCase().includes(query) ||
-      n.content.toLowerCase().includes(query)
-    ) {
-      results.push({
-        type: "Note",
-        title: n.title
-      });
-    }
-  });
-
-  /* RENDER */
-  resultsDiv.innerHTML = results.length
-    ? results.map(r => `
-        <div class="search-item">
-          <strong>[${r.type}]</strong> ${highlight(r.title, query)}
-        </div>
-      `).join("")
-    : `<p>No results found</p>`;
-}
-
-/* HIGHLIGHT MATCH */
-function highlight(text, query) {
-  const regex = new RegExp(`(${query})`, "gi");
-  return text.replace(regex, `<mark>$1</mark>`);
-}
-
-/* TAG FILTER */
-function filterByTag(tag) {
-  const notes = JSON.parse(localStorage.getItem("notes")) || [];
-  const resultsDiv = document.getElementById("searchResults");
-
-  const filtered = notes.filter(n =>
-    n.tags.map(t => t.trim().toLowerCase()).includes(tag.toLowerCase())
+  const tasks = getTasks().filter(t =>
+    t.text.toLowerCase().includes(query)
   );
 
-  resultsDiv.innerHTML = filtered.length
-    ? filtered.map(n => `
-        <div class="search-item">
-          <strong>[Note]</strong> ${n.title}
+  const notes = getNotes().filter(n =>
+    n.title.toLowerCase().includes(query) ||
+    n.content.toLowerCase().includes(query) ||
+    n.tags.some(t => t.toLowerCase().includes(query))
+  );
+
+  const results = [
+    ...tasks.map(t => ({ type: 'task', label: t.text, sub: t.priority + ' priority', page: 'tasks' })),
+    ...notes.map(n => ({ type: 'note', label: n.title, sub: n.content.slice(0, 60), page: 'notes' })),
+  ];
+
+  if (results.length === 0) {
+    dropdown.innerHTML = `
+      <div style="padding:16px;text-align:center;color:var(--text-muted);font-size:13px">
+        No results for "<strong>${escapeHtml(query)}</strong>"
+      </div>`;
+  } else {
+    dropdown.innerHTML = results.slice(0, 8).map(r => `
+      <div class="search-result-item" onclick="goToSearchResult('${r.page}'); document.getElementById('searchDropdown').classList.remove('show');">
+        <span class="search-result-type ${r.type}">${r.type}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:500;color:var(--text-primary)">${highlightMatch(escapeHtml(r.label), query)}</div>
+          ${r.sub ? `<div style="font-size:11px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(r.sub)}</div>` : ''}
         </div>
-      `).join("")
-    : `<p>No notes with tag "${tag}"</p>`;
+      </div>
+    `).join('');
+  }
+
+  dropdown.classList.add('show');
 }
 
-/* GENERATE TAG BUTTONS */
-function loadTags() {
-  const notes = JSON.parse(localStorage.getItem("notes")) || [];
-  const container = document.getElementById("searchResults");
-
-  let allTags = [];
-
-  notes.forEach(n => {
-    allTags.push(...n.tags);
-  });
-
-  const uniqueTags = [...new Set(allTags)];
-
-  const tagHTML = uniqueTags.map(tag => `
-    <span class="tag-filter" onclick="filterByTag('${tag}')">
-      #${tag}
-    </span>
-  `).join("");
-
-  container.innerHTML = `
-    <h6>Filter by Tags:</h6>
-    ${tagHTML}
-  `;
+function goToSearchResult(page) {
+  showPage(page);
+  const input = document.getElementById('globalSearchInput');
+  if (input) input.value = '';
 }
 
-/* LOAD TAGS INIT */
-loadTags();
+function highlightMatch(text, query) {
+  const idx = text.toLowerCase().indexOf(query);
+  if (idx === -1) return text;
+  return text.slice(0, idx)
+    + `<mark style="background:rgba(124,58,237,0.3);color:var(--accent-light);border-radius:3px;padding:0 2px">${text.slice(idx, idx + query.length)}</mark>`
+    + text.slice(idx + query.length);
+}
+
+// Keyboard shortcut: Ctrl+K or Cmd+K to focus search
+document.addEventListener('keydown', function (e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    const input = document.getElementById('globalSearchInput');
+    if (input) input.focus();
+  }
+  if (e.key === 'Escape') {
+    const dropdown = document.getElementById('searchDropdown');
+    if (dropdown) dropdown.classList.remove('show');
+    const input = document.getElementById('globalSearchInput');
+    if (input) input.blur();
+  }
+});
